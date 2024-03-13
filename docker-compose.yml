@@ -1,0 +1,56 @@
+version: '3.9'
+services:
+  infinitecraftlogger:
+    image: ghcr.io/yanorei32/infinite-craft-logger:latest
+    hostname: infinitecraftlogger
+    container_name: infinitecraftlogger__infinitecraftlogger
+    restart: unless-stopped
+
+    environment:
+      HTTPS: "true"
+      TOKENS: ${ICL_TOKENS}
+
+    volumes:
+      - type: volume
+        source: infinitecraftlogger_data
+        target: /var/infinite-craft-logger/
+
+    expose:
+      - 8888
+
+    networks:
+      - default
+
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+
+  cloudflared:
+    image: cloudflare/cloudflared:2024.2.1@sha256:60e94a8669dccbe461b6913ce33ab759104334220b49042ec03cfca62a2f01e7
+    hostname: cloudflared
+    container_name: infinitecraftlogger__cloudflared
+    restart: unless-stopped
+
+    environment:
+      TUNNEL_METRICS: 0.0.0.0:9126
+      TUNNEL_LOGFILE: /dev/stdout
+
+    command: tunnel run --token ${TUNNEL_TOKEN}
+    user: root
+
+    networks:
+      default:
+
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+
+volumes:
+  infinitecraftlogger_data:
+    name: infinitecraftlogger__infinitecraftlogger_data
+
+networks:
+  default:
+    name: infinitecraftlogger__default
