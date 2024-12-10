@@ -27,7 +27,7 @@ services:
           memory: 512m
 
   cloudflared:
-    image: cloudflare/cloudflared:2024.6.0@sha256:8245fa2eeeabf437b061909cd59f123b39730f626bc676dc37cd3fb9f6880580
+    image: cloudflare/cloudflared:2024.12.1@sha256:fc6afe4a5dcf2a801b39fcd538c9d5d4d53ea229fe9976584835bdb8c185ed5d
     hostname: cloudflared
     container_name: infinitecraftlogger__cloudflared
     restart: unless-stopped
